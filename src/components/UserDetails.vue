@@ -26,17 +26,22 @@
 <script>
 export default {
   data() {
+    console.log('User ID:', this.$route.params.id);
     return {
+      userId: this.$route.params.id,
       user: {},
       editUserName: '',
       editUserEmail: ''
     }
   },
+  computed: {
+    apiUrl() {
+      return process.env.VUE_APP_API_URL + 'users/' + this.userId + '/';
+    }
+  },
   mounted() {
-    const userId = this.$route.params.id;
-    const apiURL = `http://localhost:8000/api/users/${userId}/`;
 
-    fetch(apiURL)
+    fetch(this.apiUrl)
       .then(response => response.json())
       .then(data => {
         this.user = data;
@@ -46,9 +51,7 @@ export default {
   methods: {
     editUser() {
       // send the PUT request to the API and parameters are from Edit User form
-      const userId = this.$route.params.id;
-      const apiURL = `http://localhost:8000/api/users/${userId}/`;
-      fetch(apiURL, {
+      fetch(this.apiUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -68,19 +71,20 @@ export default {
       .catch(error => console.error(error))
     },
     deleteUser() {
-      const userId = this.$route.params.id;
-      const apiURL = `http://localhost:8000/api/users/${userId}/`;
-
-      fetch(apiURL, {
+      fetch(this.apiUrl, {
         method: 'DELETE'
       })
-      .then(response => response.json())
+      .then(response => {
+        response.json()
+      })
       .then(data => {
         console.log(data);
         // Navigate back to the user list page
         this.$router.push('/users');
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error)
+      });
 
     }
   }

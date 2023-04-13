@@ -27,15 +27,14 @@
 export default {
   data() {
     return {
+      apiUrl: process.env.VUE_APP_API_URL + 'users/',
       users: [],
       name: '',
       email: ''
     }
   },
   mounted() {
-    const apiURL = 'http://localhost:8000/api/users/';
-
-    fetch(apiURL)
+    fetch(this.apiUrl)
       .then(response => response.json())
       .then(data => {
         this.users = data;
@@ -44,8 +43,8 @@ export default {
   },
   methods: {
     createUser() {
-    const apiURL = 'http://localhost:8000/api/users/';
-    fetch(apiURL, {
+
+    fetch(this.apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
